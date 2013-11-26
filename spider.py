@@ -4,12 +4,15 @@
 # is recommended instead of this
 
 # Config Variables
-URL = "http://www.yelp.com/search?find_desc=bar+with+live+music&find_loc=San+Francisco%2C+CA&ns=1#find_desc=hipster+bars"
-HARD_STOP = 100
+
+QUERY = "bar with live music"
+NUMBER_OF_RESULTS = 100
 
 #################################################################
 # Controller Methods
 #################################################################
+URL = "http://www.yelp.com/search?find_desc="+"+".join(QUERY.split(" "))+"&find_loc=San+Francisco%2C+CA&ns=1#find_desc=hipster+bars"
+
 from bs4 import BeautifulSoup
 import urllib2
 import json
@@ -81,7 +84,7 @@ def spider():
     contents = parse(URL)['results']
     results = contents
     x = 10
-    while len(contents) > 0 and x < HARD_STOP:
+    while len(contents) > 0 and x < NUMBER_OF_RESULTS:
         new_url = URL + "&start=" + str(x)
         contents = parse(new_url)['results']
         results += contents
