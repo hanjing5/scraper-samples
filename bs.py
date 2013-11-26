@@ -1,8 +1,18 @@
+# This is a quick and dirty script to grab some data from Yelp
+# You will probably get a lot of duplicates. Using Yelp's API
+# is recommended instead of this
+
+# Config Variables
+URL = "http://www.yelp.com/search?find_desc=bar+with+live+music&find_loc=San+Francisco%2C+CA&ns=1#find_desc=hipster+bars"
+HARD_STOP = 100
+
+#################################################################
+# Controller Methods
+#################################################################
 from bs4 import BeautifulSoup
 import urllib2
 import json
-
-URL = "http://www.yelp.com/search?find_desc=bar+with+live+music&find_loc=San+Francisco%2C+CA&ns=1#find_desc=hipster+bars"
+import time
 
 def initSchema():
     """
@@ -36,7 +46,6 @@ def getData(soup, tag, h):
         return str(clean(d.pop().contents[0]))
     return None
 
-
 def parse(url):
     """Given an URL u, fetch all data we want into an array of objects
     """
@@ -61,7 +70,20 @@ def parse(url):
         results.append(schema)
     return {'results':results}
 
+def spider():
+    contents = parse(URL)['results']
+    results = contents
+    x = 10
+    while len(contents) > 0 and x < HARD_STOP:
+        new_url = URL + "&start=" + str(x)
+        contents = parse(new_url)['results']
+        results += contents
+        x += 10
+        print "Crawling: " + str(x-10) + " to " + str(x)
+        time.sleep(0.1) # wait a bit to reduce load on the server
+    return {'results':results}
+
 if __name__ == "__main__":
     # Export the file
     with open("yelp-results.json","w") as f:
-        f.write(json.dumps(parse(URL)))
+        f.write(json.dumps(spider()))
