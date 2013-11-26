@@ -33,14 +33,15 @@ def clean(s):
     return s.replace('\t','').replace('\n','')
 
 def getData(soup, tag, h):
-    """Get content(text) from an BeautifulSoup object
-    given a base tag and an attribute in the form of a hash
-    
-    ex: <div class="foo"> will be ('div', {'class':'foo'})
+    """
+        Get content(text) from an BeautifulSoup object
+        given a base tag and an attribute in the form of a hash
+        
+        ex: <div class="foo"> will be ('div', {'class':'foo'})
 
-    :Parameters:
-      - `tag`: html tag name
-      - `h`: hash representing the attribute name and value
+        :Parameters:
+          - `tag`: html tag name
+          - `h`: hash representing the attribute name and value
     """
     d = soup.find_all(tag, h)
     if len(d) > 0:
@@ -48,7 +49,8 @@ def getData(soup, tag, h):
     return None
 
 def parse(url):
-    """Given an URL u, fetch all data we want into an array of objects
+    """
+        Given an URL u, fetch all data we want into an array of objects
     """
     html_doc = urllib2.urlopen(url).read()
     soup = BeautifulSoup(html_doc)
@@ -72,6 +74,10 @@ def parse(url):
     return {'results':results}
 
 def spider():
+    """
+        Taking advantage of Yelp's "start=x" parameter to loop through
+        the pages
+    """
     contents = parse(URL)['results']
     results = contents
     x = 10
@@ -85,6 +91,6 @@ def spider():
     return {'results':results}
 
 if __name__ == "__main__":
-    # Export the file
+    # Export reuslts to file
     with open("yelp-results.json","w") as f:
         f.write(json.dumps(spider()))
