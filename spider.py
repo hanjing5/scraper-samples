@@ -1,4 +1,5 @@
 # This is a quick and dirty script to grab some data from Yelp
+# and export it to a file called yelp-results.json
 # You will probably get a lot of duplicates. Using Yelp's API
 # is recommended instead of this
 
